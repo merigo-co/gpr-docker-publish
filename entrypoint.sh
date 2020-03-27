@@ -27,6 +27,10 @@ if [[ -z "$INPUT_BUILD_CONTEXT" ]]; then
 	exit 1
 fi
 
+if [[ -z "$INPUT_GITHUB_REPOSITORY" ]]; then
+	INPUT_GITHUB_REPOSITORY=${GITHUB_REPOSITORY}
+fi
+
 
 # The following environment variables will be provided by the environment automatically: GITHUB_REPOSITORY, GITHUB_SHA
 
@@ -38,7 +42,7 @@ echo ${GITHUB_TOKEN} | docker login docker.pkg.github.com -u "${username}" --pas
 
 # Set Local Variables, lowering case to make it work
 shortSHA=$(echo "${GITHUB_SHA}" | cut -c1-12)
-tag="$(echo ${GITHUB_REPOSITORY} | tr "[:upper:]" "[:lower:]")"
+tag="$(echo ${INPUT_GITHUB_REPOSITORY} | tr "[:upper:]" "[:lower:]")"
 BASE_NAME="docker.pkg.github.com/${tag}/${INPUT_IMAGE_NAME}"
 SHA_NAME="${BASE_NAME}:${shortSHA}"
 
@@ -71,4 +75,4 @@ docker push ${BASE_NAME}
 docker push ${SHA_NAME}
 
 echo "::set-output name=IMAGE_SHA_NAME::${SHA_NAME}"
-echo "::set-output name=IMAGE_URL::https://github.com/${GITHUB_REPOSITORY}/packages"
+echo "::set-output name=IMAGE_URL::https://github.com/${INPUT_GITHUB_REPOSITORY}/packages"

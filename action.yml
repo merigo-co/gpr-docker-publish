@@ -24,6 +24,9 @@ inputs:
   tag:
     description: custom tag you want to assign to the image.  
     require: false
+  github_repository:
+    description: override for the GITHUB_REPOSITORY value to point to another repo
+    require: false
 outputs:
   IMAGE_SHA_NAME:
     description: name of the Docker Image including the tag
